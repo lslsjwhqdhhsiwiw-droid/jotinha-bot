@@ -1,10 +1,7 @@
 import discord
 from discord.ext import commands
 import os
-from dotenv import load_dotenv
 import asyncio
-
-load_dotenv()
 
 PREFIX = '!'
 intents = discord.Intents.all()
