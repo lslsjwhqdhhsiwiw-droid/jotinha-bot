@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import os
 import asyncio
+import logging
+import re
 
 PREFIX = '!'
 intents = discord.Intents.all()
@@ -131,14 +133,112 @@ async def ajuda(ctx):
     await ctx.send(embed=embed)
 
 
+def validate_token(token: str | None) -> tuple[bool, str]:
+    """
+    Validate the Discord token and return (is_valid, reason).
+
+    A Discord bot token has three Base64url-encoded segments separated by dots:
+      <user_id_b64>.<timestamp_b64>.<hmac_b64>
+    The full token is typically 70–80 characters long.
+    """
+    if not token:
+        return False, "token is empty or not set"
+
+    token = token.strip()
+
+    if not token:
+        return False, "token is blank (only whitespace)"
+
+    parts = token.split('.')
+    if len(parts) != 3:
+        return False, (
+            f"token has {len(parts)} segment(s) separated by '.', expected 3 — "
+            "this is not a valid Discord bot token format"
+        )
+
+    # Each segment must be non-empty Base64url characters
+    b64url_re = re.compile(r'^[A-Za-z0-9_\-]+$')
+
+    for i, part in enumerate(parts):
+        if not part:
+            return False, f"segment {i + 1} of the token is empty"
+        if not b64url_re.match(part):
+            return False, (
+                f"segment {i + 1} contains characters outside the Base64url "
+                "alphabet — the token may have been copied incorrectly"
+            )
+
+    if len(token) < 50:
+        return False, (
+            f"token is only {len(token)} characters long; "
+            "Discord bot tokens are typically 70–80 characters"
+        )
+
+    return True, "ok"
+
+
+def redact_token(token: str) -> str:
+    """Return a redacted view showing only the first 10 and last 5 characters."""
+    if len(token) <= 15:
+        return "*" * len(token)
+    return f"{token[:10]}{'*' * (len(token) - 15)}{token[-5:]}"
+
+
 if __name__ == "__main__":
+    # Configure logging so Railway captures structured output
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    log = logging.getLogger("bot.startup")
+
+    log.info("=== JOTINHA ADM — startup ===")
+
     # Keep-alive só roda no Replit (não necessário no Railway)
     if os.getenv('REPL_ID'):
         from keep_alive import keep_alive
         keep_alive()
+        log.info("keep_alive thread started (Replit environment detected)")
 
-    token = os.getenv('DISCORD_TOKEN')
-    if token:
-        bot.run(token)
+    # ── Token validation ──────────────────────────────────────────────────────
+    raw_token = os.getenv('DISCORD_TOKEN')
+
+    log.info("Checking DISCORD_TOKEN environment variable…")
+
+    if raw_token is None:
+        log.critical(
+            "DISCORD_TOKEN is not set in the environment. "
+            "Go to Railway → your service → Variables and add DISCORD_TOKEN."
+        )
+        raise SystemExit(1)
+
+    token = raw_token.strip()
+
+    # Report basic token metadata without exposing the full secret
+    log.info("DISCORD_TOKEN is present — length: %d character(s)", len(token))
+    if len(token) >= 15:
+        log.info("Token preview (redacted): %s", redact_token(token))
     else:
-        print("❌ CRÍTICO: DISCORD_TOKEN não encontrado.")
+        log.warning("Token is suspiciously short (%d chars); preview suppressed", len(token))
+
+    if len(raw_token) != len(token):
+        log.warning(
+            "Leading/trailing whitespace was stripped from DISCORD_TOKEN "
+            "(%d → %d chars). Check the Railway variable for accidental spaces.",
+            len(raw_token), len(token),
+        )
+
+    is_valid, reason = validate_token(token)
+    if not is_valid:
+        log.critical(
+            "DISCORD_TOKEN failed format validation: %s. "
+            "Regenerate the token at https://discord.com/developers/applications "
+            "and update the Railway variable.",
+            reason,
+        )
+        raise SystemExit(1)
+
+    log.info("Token format looks valid — attempting to connect to Discord…")
+
+    bot.run(token, log_handler=None)  # log_handler=None keeps our own logging config
