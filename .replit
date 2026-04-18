@@ -42,3 +42,8 @@ externalPort = 80
 [deployment]
 deploymentTarget = "vm"
 run = ["python", "bot.py"]
+
+[userenv]
+
+[userenv.shared]
+DISCORD_TOKEN = "MTM5Mjk1NjEwMTc4MzQ1MzczNw.GxgaTj.5VZOhKdJQrMlSYpbBAI1KGfJPH7QuQo-nU7rgI"
