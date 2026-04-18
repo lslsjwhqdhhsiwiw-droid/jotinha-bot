@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import asyncio
 
-load_dotenv(override=True)
+load_dotenv()
 
 PREFIX = '!'
 intents = discord.Intents.all()

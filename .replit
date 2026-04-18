@@ -46,4 +46,4 @@ run = ["python", "bot.py"]
 [userenv]
 
 [userenv.shared]
-DISCORD_TOKEN = "MTM5Mjk1NjEwMTc4MzQ1MzczNw.GnNfEW.emCFeiGNSTPbhJ9m26kxPYm1grfigbAXTz2oXA"
+DISCORD_TOKEN = "MTM5Mjk1NjEwMTc4MzQ1MzczNw.GO-CYA.IDXNPUZy7JxfdBDR-p4ykakX1P_dhOR2YiHBsE"
