@@ -1,0 +1,197 @@
+{
+  "conversations": {},
+  "learned_facts": [],
+  "user_preferences": {
+    "954462769585999933": {
+      "favorite_commands": {
+        "ajuda": 6,
+        "clima": 2
+      },
+      "sentiment_history": [
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral",
+        "neutral"
+      ],
+      "interaction_count": 13,
+      "personality_notes": [],
+      "conversation_topics": [],
+      "last_active": "2026-01-11T20:52:18.601087",
+      "preferred_time": [
+        20
+      ]
+    }
+  },
+  "server_insights": {},
+  "emotional_state": "neutral",
+  "learning_log": [
+    {
+      "timestamp": "2026-01-11T20:41:58.851334",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes ajuda commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:41:58.880134",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes ajuda commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:44:04.855908",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes clima commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:44:04.888227",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes clima commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:44:45.755688",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes ajuda commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:44:45.828489",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes ajuda commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:52:18.601794",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes ajuda commands",
+      "sentiment": "neutral"
+    },
+    {
+      "timestamp": "2026-01-11T20:52:18.636042",
+      "user_id": "954462769585999933",
+      "learned": "User 954462769585999933 likes ajuda commands",
+      "sentiment": "neutral"
+    }
+  ],
+  "achievement_tracking": {},
+  "cultural_knowledge": [
+    "Brasil é conhecido pelo futebol e carnaval",
+    "Pizza é uma das comidas mais populares no mundo",
+    "Música brasileira é muito diversa",
+    "Gaming é uma paixão universal"
+  ],
+  "user_music_tastes": {},
+  "user_gaming_preferences": {},
+  "personality_analysis": {
+    "954462769585999933": {
+      "extroversion": 0.5,
+      "humor_level": 0.5,
+      "gaming_passion": 0.5,
+      "music_interest": 0.5,
+      "social_activity": 0.5,
+      "curiosity": 0.5,
+      "activity_time": []
+    }
+  },
+  "mood_patterns": {
+    "954462769585999933": {
+      "daily_mood": {
+        "2026-01-11": [
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral"
+        ]
+      },
+      "hourly_patterns": {
+        "20": [
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral",
+          "neutral"
+        ]
+      },
+      "emotional_stability": 0.5,
+      "mood_triggers": {},
+      "recent_moods": [
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:41:58.851316",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:41:58.880103",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:44:04.855886",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:44:04.888186",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:44:45.755667",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:44:45.828458",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:52:18.601773",
+          "hour": 20
+        },
+        {
+          "sentiment": "neutral",
+          "timestamp": "2026-01-11T20:52:18.636010",
+          "hour": 20
+        }
+      ]
+    }
+  },
+  "proactive_suggestions": {},
+  "server_activity_insights": {},
+  "smart_recommendations": {},
+  "favorite_topics": {},
+  "interaction_quality_score": {},
+  "auto_event_suggestions": [],
+  "social_connections": {},
+  "learning_evolution": [],
+  "guild_stats": {
+    "1284290295973806222": {
+      "message_count": 5,
+      "active_users": [
+        "954462769585999933"
+      ],
+      "dominant_sentiment": "neutral",
+      "activity_level": "low",
+      "popular_topics": []
+    }
+  }
+}

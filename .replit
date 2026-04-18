@@ -1,0 +1,44 @@
+modules = ["python-3.11"]
+[agent]
+expertMode = true
+integrations = ["python_openai:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["ffmpeg", "libopus", "libsodium"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Discord Bot Keep-Alive"
+
+[[workflows.workflow]]
+name = "Discord Bot Keep-Alive"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cp attached_assets/_1755384087333.env .env && python bot.py"
+waitForPort = 8080
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[ports]]
+localPort = 3000
+externalPort = 3001
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[deployment]
+deploymentTarget = "vm"
+run = ["python", "bot.py"]

@@ -1,0 +1,298 @@
+═══════════════════════════════════════════════════════════════
+🚀 GUIA COMPLETO: HOSPEDAR SEU BOT NO ORACLE CLOUD (GRÁTIS)
+═══════════════════════════════════════════════════════════════
+
+✅ TOTALMENTE GRATUITO PARA SEMPRE
+✅ 24GB RAM + 4 CPUs ARM
+✅ SUPORTA VOZ DO DISCORD (UDP funciona!)
+✅ 200GB de armazenamento
+✅ 10TB de banda por mês
+
+═══════════════════════════════════════════════════════════════
+📋 PASSO 1: CRIAR CONTA NO ORACLE CLOUD
+═══════════════════════════════════════════════════════════════
+
+1. Acesse: https://www.oracle.com/cloud/free/
+
+2. Clique em "Start for free" (Começar gratuitamente)
+
+3. Preencha seus dados:
+   - Email
+   - Senha
+   - País: Brasil
+   
+4. IMPORTANTE: Vai pedir cartão de crédito para verificação
+   - Cobra R$5 temporariamente (devolve depois)
+   - Não cobra nada depois, é só verificação!
+   
+5. Escolha a região: "São Paulo" (mais perto do Brasil)
+
+6. Espere a conta ser aprovada (pode levar alguns minutos)
+
+═══════════════════════════════════════════════════════════════
+🖥️ PASSO 2: CRIAR SUA MÁQUINA VIRTUAL (VM)
+═══════════════════════════════════════════════════════════════
+
+1. Faça login em: https://cloud.oracle.com
+
+2. No menu lateral, clique em: "Compute" → "Instances"
+
+3. Clique em "Create Instance" (Criar Instância)
+
+4. CONFIGURAÇÕES:
+   
+   Nome: "discord-bot-jotinha"
+   
+   Image: "Canonical Ubuntu 22.04"
+   (Clique em "Change Image" se não estiver selecionado)
+   
+   Shape: "VM.Standard.A1.Flex" (ARM - GRATUITO)
+   - OCPUs: 2 (ou mais se quiser)
+   - Memory (RAM): 12 GB (ou mais se quiser)
+   
+   Networking: DEIXE PADRÃO
+   
+   SSH Keys: 
+   - Clique em "Save Private Key" (BAIXE E GUARDE!)
+   - Clique em "Save Public Key" (BAIXE E GUARDE!)
+
+5. Clique em "Create" (Criar)
+
+6. Espere 2-3 minutos até ficar "Running" (verde)
+
+7. COPIE O "PUBLIC IP ADDRESS" (você vai precisar!)
+   Exemplo: 123.456.789.012
+
+═══════════════════════════════════════════════════════════════
+🔓 PASSO 3: CONFIGURAR FIREWALL (PERMITIR PORTAS)
+═══════════════════════════════════════════════════════════════
+
+1. Na página da sua Instance, clique em "Virtual cloud network"
+
+2. Clique em "Security Lists" → "Default Security List"
+
+3. Clique em "Add Ingress Rules" (Adicionar Regras)
+
+4. Adicione estas regras:
+   
+   REGRA 1 (Keep-Alive):
+   - Source CIDR: 0.0.0.0/0
+   - Destination Port: 8080
+   - Description: "Bot Keep-Alive"
+   - Clique "Add"
+   
+   REGRA 2 (Web Interface):
+   - Source CIDR: 0.0.0.0/0
+   - Destination Port: 3000
+   - Description: "Bot Web Interface"
+   - Clique "Add"
+
+═══════════════════════════════════════════════════════════════
+💻 PASSO 4: CONECTAR NA SUA VM
+═══════════════════════════════════════════════════════════════
+
+WINDOWS (usando CMD ou PowerShell):
+--------------------------------------
+1. Aperte Windows + R
+2. Digite "cmd" e aperte Enter
+3. Navegue até onde você salvou a chave SSH:
+   cd Downloads
+4. Execute:
+   ssh ubuntu@SEU_IP_PUBLICO -i ssh-key-*.key
+
+MAC/LINUX:
+----------
+1. Abra o Terminal
+2. Navegue até onde você salvou a chave:
+   cd ~/Downloads
+3. Dê permissão para a chave:
+   chmod 400 ssh-key-*.key
+4. Conecte:
+   ssh ubuntu@SEU_IP_PUBLICO -i ssh-key-*.key
+
+Quando perguntar "Are you sure?", digite: yes
+
+Agora você está DENTRO da sua máquina na Oracle Cloud! 🎉
+
+═══════════════════════════════════════════════════════════════
+📦 PASSO 5: INSTALAR TUDO NECESSÁRIO
+═══════════════════════════════════════════════════════════════
+
+Cole os comandos abaixo (um de cada vez):
+
+# Atualizar sistema
+sudo apt update && sudo apt upgrade -y
+
+# Instalar Python 3.11
+sudo apt install -y python3 python3-pip python3-venv git
+
+# Instalar FFmpeg (para áudio do Discord)
+sudo apt install -y ffmpeg
+
+# Verificar se instalou
+python3 --version
+ffmpeg -version
+
+═══════════════════════════════════════════════════════════════
+📁 PASSO 6: ENVIAR OS ARQUIVOS DO BOT
+═══════════════════════════════════════════════════════════════
+
+OPÇÃO A - Usando Git (RECOMENDADO):
+------------------------------------
+1. No Replit, vá em Shell (ao lado do Console)
+2. Digite: git init
+3. Configure:
+   git config user.name "Seu Nome"
+   git config user.email "seuemail@exemplo.com"
+4. Suba para GitHub:
+   git add .
+   git commit -m "Bot JOTINHA"
+   
+5. Na Oracle VM, clone:
+   git clone https://LINK_DO_SEU_REPO.git
+   cd nome-do-repo
+
+OPÇÃO B - Download direto do Replit:
+-------------------------------------
+1. No Replit, clique nos 3 pontinhos ao lado do nome do projeto
+2. Clique em "Download as zip"
+3. No seu PC, faça upload usando SCP:
+
+   scp -i ~/Downloads/ssh-key-*.key bot.zip ubuntu@SEU_IP:~
+
+4. Na Oracle VM:
+   unzip bot.zip
+
+═══════════════════════════════════════════════════════════════
+⚙️ PASSO 7: CONFIGURAR O BOT
+═══════════════════════════════════════════════════════════════
+
+1. Na VM, navegue até a pasta do bot:
+   cd discord-bot-jotinha  (ou nome da sua pasta)
+
+2. Crie ambiente virtual Python:
+   python3 -m venv venv
+   source venv/bin/activate
+
+3. Instale as dependências:
+   pip install -r requirements.txt
+
+   OU se não tiver requirements.txt:
+   pip install discord.py[voice] yt-dlp python-dotenv flask beautifulsoup4 requests trafilatura wavelink aiohttp psutil pytz pynacl
+
+4. Configure as variáveis de ambiente:
+   nano .env
+   
+   Cole seu token:
+   DISCORD_TOKEN=SEU_TOKEN_AQUI
+   OPENAI_API_KEY=SUA_CHAVE_AQUI
+   
+   Salve: Ctrl+X, depois Y, depois Enter
+
+═══════════════════════════════════════════════════════════════
+🚀 PASSO 8: RODAR O BOT 24/7
+═══════════════════════════════════════════════════════════════
+
+MÉTODO 1 - Usando tmux (Simples):
+----------------------------------
+1. Instale tmux:
+   sudo apt install tmux -y
+
+2. Crie uma sessão:
+   tmux new -s bot
+
+3. Rode o bot:
+   python3 bot.py
+
+4. Desconecte sem parar o bot:
+   Aperte: Ctrl+B, depois aperte D
+
+5. Para reconectar depois:
+   tmux attach -t bot
+
+MÉTODO 2 - Usando PM2 (Mais profissional):
+-------------------------------------------
+1. Instale Node.js e PM2:
+   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+   sudo apt install -y nodejs
+   sudo npm install -g pm2
+
+2. Crie arquivo de inicialização:
+   nano start.sh
+   
+   Cole:
+   #!/bin/bash
+   cd /home/ubuntu/discord-bot-jotinha
+   source venv/bin/activate
+   python3 bot.py
+   
+   Salve: Ctrl+X, Y, Enter
+
+3. Dê permissão:
+   chmod +x start.sh
+
+4. Inicie com PM2:
+   pm2 start start.sh --name jotinha-bot
+
+5. Configure para iniciar automaticamente:
+   pm2 startup
+   pm2 save
+
+6. Comandos úteis do PM2:
+   pm2 status              # Ver status
+   pm2 logs jotinha-bot    # Ver logs
+   pm2 restart jotinha-bot # Reiniciar
+   pm2 stop jotinha-bot    # Parar
+
+═══════════════════════════════════════════════════════════════
+✅ PRONTO! SEU BOT ESTÁ RODANDO 24/7!
+═══════════════════════════════════════════════════════════════
+
+Agora o bot está rodando na Oracle Cloud e vai funcionar COM VOZ!
+
+TESTES:
+-------
+1. Entre em um canal de voz no Discord
+2. Digite: !pv Gusttavo Lima
+3. O bot deve ENTRAR NA CALL e tocar a música!
+
+COMANDOS ÚTEIS:
+---------------
+Ver logs: pm2 logs jotinha-bot
+Reiniciar: pm2 restart jotinha-bot
+Parar: pm2 stop jotinha-bot
+Status: pm2 status
+
+ATUALIZAR O BOT:
+----------------
+1. Conecte via SSH
+2. Entre na pasta: cd discord-bot-jotinha
+3. Atualize: git pull (se usar git)
+4. Reinicie: pm2 restart jotinha-bot
+
+═══════════════════════════════════════════════════════════════
+🆘 PROBLEMAS COMUNS
+═══════════════════════════════════════════════════════════════
+
+❌ "Permission denied" ao conectar SSH:
+   Solução: chmod 400 ssh-key-*.key
+
+❌ Bot não entra na call:
+   Solução: Instale PyNaCl: pip install pynacl
+
+❌ Erro de FFmpeg:
+   Solução: sudo apt install ffmpeg -y
+
+❌ Bot desconecta sozinho:
+   Solução: Use PM2 em vez de tmux
+
+❌ Esqueci meu IP público:
+   Solução: Veja em cloud.oracle.com → Compute → Instances
+
+═══════════════════════════════════════════════════════════════
+📞 DÚVIDAS?
+═══════════════════════════════════════════════════════════════
+
+Qualquer problema, me avisa que eu te ajudo! 😊
+
+BOA SORTE! 🚀🎉

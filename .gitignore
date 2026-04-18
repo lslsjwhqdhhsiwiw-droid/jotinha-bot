@@ -1,0 +1,32 @@
+# Variáveis de ambiente e segredos
+.env
+*.env
+attached_assets/*.env
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Dados locais (não precisam ir pro GitHub)
+*.db
+*.sqlite
+ai_memory.json
+ai_database.db
+music_data.json
+user_warnings.json
+admin_configs.json
+channel_config.json
+economy_data.json
+social_data.json
+daily_tasks_control.json
+
+# Logs
+*.log
+
+# Replit
+.replit
+.upm/
+.cache/
+.pythonlibs/
+uv.lock

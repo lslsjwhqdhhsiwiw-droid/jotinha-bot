@@ -1,0 +1,14 @@
+{
+  "1284290295973806222": {
+    "bot_channel": null,
+    "general_channel": null,
+    "music_channel": null,
+    "news_channel": null,
+    "ai_channel": null,
+    "events_channel": null,
+    "economy_channel": null,
+    "auto_messages": true,
+    "preferred_language": "pt-br",
+    "noticias_channel": 1416518441765966014
+  }
+}
