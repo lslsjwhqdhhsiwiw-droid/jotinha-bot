@@ -1,10 +1,23 @@
 import discord
 from discord.ext import commands
 import os
-from dotenv import load_dotenv
+import sys
+import logging
 import asyncio
+import traceback
+from dotenv import load_dotenv
 
 load_dotenv()
+
+# ── Logging ────────────────────────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger("jotinha")
 
 PREFIX = '!'
 intents = discord.Intents.all()
@@ -22,6 +35,7 @@ COGS = [
 
 @bot.event
 async def on_ready():
+    log.info(f"SISTEMA ONLINE: {bot.user} (ID: {bot.user.id})")
     print(f'SISTEMA ONLINE: {bot.user} (ID: {bot.user.id})')
     await bot.change_presence(
         activity=discord.Activity(
@@ -32,13 +46,38 @@ async def on_ready():
     for cog in COGS:
         try:
             await bot.load_extension(cog)
+            log.info(f"✅ Módulo carregado: {cog}")
             print(f"✅ Módulo: {cog}")
         except Exception as e:
+            log.error(f"❌ Falha ao carregar [{cog}]: {e}")
             print(f"❌ Falha [{cog}]: {e}")
 
 
 @bot.event
+async def on_disconnect():
+    log.warning("⚠️  Bot desconectado do Discord. Aguardando reconexão automática...")
+
+
+@bot.event
+async def on_resumed():
+    log.info("🔄 Sessão retomada com sucesso.")
+
+
+@bot.event
+async def on_error(event, *args, **kwargs):
+    log.error(f"Erro não tratado no evento '{event}':\n{traceback.format_exc()}")
+
+
+@bot.event
 async def on_command_error(ctx, error):
+    # Desempacota erros de CommandInvokeError para expor a causa raiz
+    if isinstance(error, commands.CommandInvokeError):
+        log.error(
+            f"Erro ao executar '{ctx.command}' por {ctx.author}: "
+            f"{traceback.format_exception(type(error.original), error.original, error.original.__traceback__)}"
+        )
+        error = error.original
+
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(f"❌ **Argumento faltando.** Use `{PREFIX}ajuda` para ver como usar o comando.")
     elif isinstance(error, commands.MemberNotFound):
@@ -49,6 +88,18 @@ async def on_command_error(ctx, error):
         await ctx.send(f"❌ **Argumento inválido.** Verifique o comando com `{PREFIX}ajuda`.")
     elif isinstance(error, commands.CommandNotFound):
         pass
+    else:
+        log.error(f"Erro inesperado: {error}")
+
+
+# ── Heartbeat monitor ──────────────────────────────────────────────────────────
+async def heartbeat_monitor():
+    """Loga a latência do gateway a cada 5 minutos para monitoramento."""
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        latency_ms = round(bot.latency * 1000)
+        log.info(f"💓 Heartbeat — latência: {latency_ms}ms")
+        await asyncio.sleep(300)
 
 
 @bot.command(name='ping')
@@ -88,7 +139,8 @@ async def ajuda(ctx):
             "`!kick @user` — Expulsar\n"
             "`!mute @user [min]` — Timeout\n"
             "`!clear [qtd]` — Limpar mensagens\n"
-            "`!warn @user` — Advertir\n"
+            "`!warn @user [motivo]` — Advertir (3 = kick)\n"
+            "`!unwarn @user` — Remover última advertência\n"
             "`!warns @user` — Ver advertências\n"
             "`!lock` / `!unlock` — Bloquear canal\n"
             "`!nuke` — Limpar canal inteiro"
@@ -116,7 +168,12 @@ async def ajuda(ctx):
             "`!amor @u1 @u2` · `!ship @u1 @u2`\n"
             "`!sorte` · `!piada` · `!cantada`\n"
             "`!8ball [pergunta]` · `!caraoucoroa`\n"
-            "`!beijo @user` · `!tapa @user` · `!abraço @user`"
+            "`!beijo @user` · `!tapa @user` · `!abraço @user`\n"
+            "`!ppt @user` — Pedra-papel-tesoura\n"
+            "`!trivia` — Pergunta de conhecimento\n"
+            "`!duelo @user` — Duelo de dados\n"
+            "`!roletarussiana` — Jogo de risco\n"
+            "`!ranking` — Top usuários mais ativos"
         ),
         inline=False
     )
@@ -140,7 +197,18 @@ if __name__ == "__main__":
         keep_alive()
 
     token = os.getenv('DISCORD_TOKEN')
-    if token:
-        bot.run(token)
-    else:
+    if not token:
+        log.critical("DISCORD_TOKEN não encontrado. Encerrando.")
         print("❌ CRÍTICO: DISCORD_TOKEN não encontrado.")
+        sys.exit(1)
+
+    async def main():
+        async with bot:
+            bot.loop.create_task(heartbeat_monitor())
+            await bot.start(token, reconnect=True)
+
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        log.info("Bot encerrado manualmente.")
+
