@@ -15,7 +15,6 @@ COGS = [
     'cogs.admin_advanced',
     'cogs.ai_brain',
     'cogs.channel_config',
-    'cogs.music_voice',
     'cogs.fun_commands',
     'cogs.social_system',
 ]
